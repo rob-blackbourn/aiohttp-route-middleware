@@ -79,6 +79,16 @@ from aiohttp_route_middleware import UrlDispatcherEx
 app = web.Application(router=UrlDispatcherEx())
 ```
 
-The extension allows multiple handlers to be specified. The handlers are called in order until a handler returns a non `None` response, at which point the response is returned and execution stops.
+The extension allows multiple handlers to be specified. The handlers are called in order until a handler returns a non `None` response, at which point the response is returned and execution stops. 
+
+An example of this might be a route to update a comment on a post, The sequence might be:
+1. Authenticate the user.
+2. Check the user is authorised to post a comment.
+3. Fetch the post.
+4. Post the comment.
+
+```python
+app.router.add_post('/comment?post_id=1234', authenticate, authorise, fetch_post, post_comment)
+```
 
 Each handler is written in the same manner as a normal handler, in that it takes a single request argument. The request argument may be modified or enriched by each handler.
