@@ -51,6 +51,22 @@ app.router.add_get('/', authenticate, test)
 web.run_app(app)
 ```
 
+## Installation
+
+I have no requirement to upload this package to the py store at the moment.
+
+It can be installed directly from git in the following manner:
+
+```bash
+pip install git+git://github.com/rob-blackbourn/aiohttp-route-middleware
+```
+
+or
+
+```bash
+pip install https+git://github.com/rob-blackbourn/aiohttp-route-middleware
+```
+
 ## Details
 
 The extension provides a router `UrlDispatcherEx` which extends from the built in class `UrlDispatcher`. The class can be used in the following manner:
