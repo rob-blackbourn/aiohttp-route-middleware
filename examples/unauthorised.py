@@ -4,11 +4,11 @@ from aiohttp_route_middleware import UrlDispatcherEx
 async def test(request):
     return web.Response(text="Success")
 
-async def authenticate(request):
+async def authenticate(request, handler):
     request.user = 'tom'
-    return None
+    return await handler(request)
 
-async def authorise(request):
+async def authorise(request, handler):
     if request.user == 'dick':
         return None
     return web.Response(body="unauthorised", status=403)

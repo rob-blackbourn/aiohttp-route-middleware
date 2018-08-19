@@ -1,12 +1,19 @@
 from aiohttp import web, hdrs
+from functools import reduce
+
 
 def _make_handler(handlers):
-    async def invoke(request):
-        for handler in handlers:
-            response = await handler(request)
-            if response is not None:
-                return response
-    return invoke
+
+    def make_middleware_handler(middleware, handler):
+        async def invoke(request):
+            return await middleware(request, handler)
+        return invoke
+
+    reverse_handlers = reversed(handlers)
+    handler = next(reverse_handlers)
+    for middleware in reverse_handlers:
+        handler = make_middleware_handler(middleware, handler)
+    return handler
 
 class UrlDispatcherEx(web.UrlDispatcher):
 

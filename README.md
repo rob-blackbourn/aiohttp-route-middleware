@@ -10,6 +10,8 @@ It is common for routes to require specific authentication, authorisation, and e
 
 ### Basic
 
+A middleware function differs from a normal request handler, in that it gets given the next handler to call.
+
 The following example shows how to add middleware to a route.
 
 ```python
@@ -17,24 +19,44 @@ from aiohttp import web
 from aiohttp_route_middleware import UrlDispatcherEx
 
 async def test(request):
-    return web.Response(text=f"extra_stuff=[{', '.join(request.extra_stuff)}]")
+    print("..entering handler")
+    response = web.Response(text=f"extra_stuff=[{', '.join(request.extra_stuff)}]")
+    print("..exiting handler")
+    return response
 
-async def middleware1(request):
+async def middleware1(request, handler):
+    print("entering middleware 1")
     request.extra_stuff = ['foo']
-    return None
+    response = await handler(request)
+    print("exiting middleware 1")
+    return response
 
-async def middleware2(request):
+async def middleware2(request, handler):
+    print(".entering middleware 2")
     request.extra_stuff.append('bar')
-    return None
+    response = await handler(request)
+    print(".exiting middleware 2")
+    return response
 
 app = web.Application(router=UrlDispatcherEx())
 app.router.add_get('/', middleware1, middleware2, test)
 web.run_app(app)
 ```
 
+This would print out the following:
+
+```bash
+entering middleware 1
+.entering middleware 2
+..entering handler
+..exiting handler
+.exiting middleware 2
+exiting middleware 1
+```
+
 ### Middleware failure
 
-If a route returns something other than `None` the route fails with the given response.
+A middleware function may choose not to call the next handler; for example if there was an authentication error.
 
 ```python
 from aiohttp import web
@@ -43,7 +65,7 @@ from aiohttp_route_middleware import UrlDispatcherEx
 async def test(request):
     return web.Response(text="Success")
 
-async def authenticate(request):
+async def authenticate(request, handler):
     return web.Response(body="unauthenticated", status=401)
 
 app = web.Application(router=UrlDispatcherEx())
