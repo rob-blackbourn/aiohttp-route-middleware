@@ -7,9 +7,9 @@ An extension for [aiohttp](https://github.com/aio-libs/aiohttp) which provides r
 With the built in router the technique for managing route local middleware is to make nested applications.
 However nested applications require a unique url prefix. so the following cannot be achieved:
 
-GET /post/{id} (middleware: authenticate, authorise(['post:read']))  
-POST /post/{id} (middleware: authenticate, authorise(['post:read:', 'post:write']))  
-DELETE /post/{id} (middleware: authenticate, authorise(['post:read:', 'post:write']))  
+| GET /post/{id}    | (middleware: authenticate, authorise(['post:read']))|
+| POST /post/{id}   | (middleware: authenticate, authorise(['post:read:', 'post:write']))|
+| DELETE /post/{id} | (middleware: authenticate, authorise(['post:read:', 'post:write']))|
 
 This router allows a chain of middleware terminated by a handler. For example:
 
