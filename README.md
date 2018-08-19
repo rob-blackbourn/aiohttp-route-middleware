@@ -2,9 +2,23 @@
 
 ## Overview
 
-An extension for [aiohttp](https://github.com/aio-libs/aiohttp) which provides route local middleware
+An extension for [aiohttp](https://github.com/aio-libs/aiohttp) which provides route local middleware while remainining compatible with the existing router.
 
-It is common for routes to require specific authentication, authorisation, and enrichment. This pckage provides such functionality.
+With the built in router the technique for managing route local middleware is to make nested applications.
+However nested applications require a unique prefix. so the following cannot be achieved as they have the same url:
+
+GET /post/{id} (middleware: authenticate, authorise(['post:read']))
+POST /post/{id} (middleware: authenticate, authorise(['post:read:', 'post:write']))
+DELETE /post/{id} (middleware: authenticate, authorise(['post:read:', 'post:write']))
+
+This router allows a chain of middleware terminated by a handler. For example:
+
+```python
+sub_app = web.Application(router=UrlDispatcherEx())
+sub_app.router.add_get('/', authenticate, authorise(['post:read']), get_posts)
+sub_app.router.add_post('/', authenticate, authorise(['post:read', 'post:write']), get_posts)
+sub_app.router.add_delete('/', authenticate, authorise(['post:read', 'post:write']), get_posts)
+```
 
 ## Usage
 
@@ -17,6 +31,9 @@ The following example shows how to add middleware to a route.
 ```python
 from aiohttp import web
 from aiohttp_route_middleware import UrlDispatcherEx
+
+app = web.Application(router=UrlDispatcherEx())
+app.router.add_get('/', middleware1, middleware2, test)
 
 async def test(request):
     print("..entering handler")
