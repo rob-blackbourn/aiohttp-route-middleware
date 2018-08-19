@@ -14,10 +14,14 @@ DELETE /post/{id} (middleware: authenticate, authorise(['post:read:', 'post:writ
 This router allows a chain of middleware terminated by a handler. For example:
 
 ```python
-sub_app = web.Application(router=UrlDispatcherEx())
-sub_app.router.add_get('/', authenticate, authorise(['post:read']), get_posts)
-sub_app.router.add_post('/', authenticate, authorise(['post:read', 'post:write']), get_posts)
-sub_app.router.add_delete('/', authenticate, authorise(['post:read', 'post:write']), get_posts)
+post_app = web.Application(router=UrlDispatcherEx())
+post_app.router.add_get('/{id}', authenticate, authorise(['post:read']), get_posts)
+post_app.router.add_post('/{id}', authenticate, authorise(['post:read', 'post:write']), get_posts)
+post_app.router.add_delete('/{id}', authenticate, authorise(['post:read', 'post:write']), get_posts)
+
+app = web.Application()
+app.add_subapp('/post', post_app)
+
 ```
 
 ## Usage
