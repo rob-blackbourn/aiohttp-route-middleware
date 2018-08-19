@@ -51,28 +51,28 @@ class UrlDispatcherEx(web.UrlDispatcher):
         """
         Shortcut for add_route with method POST
         """
-        return self.add_route(hdrs.METH_POST, path, handlers, **kwargs)
+        return self.add_route(hdrs.METH_POST, path, *handlers, **kwargs)
 
     def add_put(self, path, *handlers, **kwargs):
         """
         Shortcut for add_route with method PUT
         """
-        return self.add_route(hdrs.METH_PUT, path, handlers, **kwargs)
+        return self.add_route(hdrs.METH_PUT, path, *handlers, **kwargs)
 
     def add_patch(self, path, *handlers, **kwargs):
         """
         Shortcut for add_route with method PATCH
         """
-        return self.add_route(hdrs.METH_PATCH, path, handlers, **kwargs)
+        return self.add_route(hdrs.METH_PATCH, path, *handlers, **kwargs)
 
     def add_delete(self, path, *handlers, **kwargs):
         """
         Shortcut for add_route with method DELETE
         """
-        return self.add_route(hdrs.METH_DELETE, path, handlers, **kwargs)
+        return self.add_route(hdrs.METH_DELETE, path, *handlers, **kwargs)
 
     def add_view(self, path, *handlers, **kwargs):
         """
         Shortcut for add_route with ANY methods for a class-based view
         """
-        return self.add_route(hdrs.METH_ANY, path, handlers, **kwargs)
+        return self.add_route(hdrs.METH_ANY, path, *handlers, **kwargs)
