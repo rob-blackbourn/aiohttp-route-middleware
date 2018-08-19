@@ -7,6 +7,7 @@ async def test(request):
     print("..exiting handler")
     return response
 
+@web.middleware
 async def middleware1(request, handler):
     print("entering middleware 1")
     request.extra_stuff = ['foo']
@@ -14,6 +15,7 @@ async def middleware1(request, handler):
     print("exiting middleware 1")
     return response
 
+@web.middleware
 async def middleware2(request, handler):
     print(".entering middleware 2")
     request.extra_stuff.append('bar')

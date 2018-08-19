@@ -47,6 +47,7 @@ async def test(request):
     print("..exiting handler")
     return response
 
+@web.middleware
 async def middleware1(request, handler):
     print("entering middleware 1")
     request.extra_stuff = ['foo']
@@ -54,6 +55,7 @@ async def middleware1(request, handler):
     print("exiting middleware 1")
     return response
 
+@web.middleware
 async def middleware2(request, handler):
     print(".entering middleware 2")
     request.extra_stuff.append('bar')
@@ -88,6 +90,7 @@ from aiohttp_route_middleware import UrlDispatcherEx
 async def test(request):
     return web.Response(text="Success")
 
+@web.middleware
 async def authenticate(request, handler):
     return web.Response(body="unauthenticated", status=401)
 

@@ -1,18 +1,34 @@
+import logging
+logger = logging.getLogger(__name__)
+from functools import partial
 from aiohttp import web, hdrs
-from functools import reduce
+
+
+def _prepare_middleware(middlewares):
+    for middleware in middlewares:
+        if getattr(middleware, '__middleware_version__', None) == 1:
+            yield middleware, True
+        else:
+            logger.warn(
+                'old-style middleware "{!r}" deprecated'.format(middleware))
+            yield middleware, False
+
+
+def _make_middleware_handler(middleware, handler):
+    async def invoke(request):
+        return await middleware(request, handler)
+    return invoke
 
 
 def _make_handler(handlers):
 
-    def make_middleware_handler(middleware, handler):
-        async def invoke(request):
-            return await middleware(request, handler)
-        return invoke
-
     reverse_handlers = reversed(handlers)
     handler = next(reverse_handlers)
-    for middleware in reverse_handlers:
-        handler = make_middleware_handler(middleware, handler)
+    for middleware, new_style in _prepare_middleware(reverse_handlers):
+        if new_style:
+            handler = partial(middleware, handler=handler)
+        else:
+            handler = _make_middleware_handler(middleware, handler)
     return handler
 
 class UrlDispatcherEx(web.UrlDispatcher):
