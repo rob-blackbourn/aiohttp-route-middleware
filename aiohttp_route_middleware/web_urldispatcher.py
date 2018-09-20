@@ -1,5 +1,6 @@
 import logging
 logger = logging.getLogger(__name__)
+
 from functools import partial
 from aiohttp import web, hdrs
 
@@ -30,6 +31,7 @@ def _make_handler(handlers):
         else:
             handler = _make_middleware_handler(middleware, handler)
     return handler
+
 
 class UrlDispatcherEx(web.UrlDispatcher):
 
