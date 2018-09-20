@@ -101,18 +101,10 @@ web.run_app(app)
 
 ## Installation
 
-I have no requirement to upload this package to the py store at the moment.
-
-It can be installed directly from git in the following manner:
+You can install it using pip:
 
 ```bash
-pip install git+git://github.com/rob-blackbourn/aiohttp-route-middleware
-```
-
-or
-
-```bash
-pip install https+git://github.com/rob-blackbourn/aiohttp-route-middleware
+pip install aiohttp-route-middleware
 ```
 
 ## Details

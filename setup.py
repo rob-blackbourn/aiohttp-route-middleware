@@ -18,6 +18,7 @@ setup(
     version=version,
     description=("Local middleware routing for aiohttp."),
     lond_description=long_description,
+    long_description_content_type='text/markdown',
     classifiers=[
         'License :: OSI Approved :: Apache Software License',
         'Intended Audience :: Developers',
