@@ -39,7 +39,6 @@ from aiohttp import web
 from aiohttp_route_middleware import UrlDispatcherEx
 
 app = web.Application(router=UrlDispatcherEx())
-app.router.add_get('/', middleware1, middleware2, test)
 
 async def test(request):
     print("..entering handler")
